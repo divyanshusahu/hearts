@@ -19,7 +19,7 @@ function PlayingCard(props) {
 
   return (
     <>
-      <div className="playing-card-root p-2 flex flex-col border font-bold shadow-lg rounded-lg">
+      <div className="playing-card-root p-2 flex flex-col border font-bold shadow-lg rounded-lg bg-white">
         <div className="h-16 w-8">
           <p className="text-center text-2xl" style={{ color: color }}>
             {props.card.number}
