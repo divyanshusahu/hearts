@@ -42,11 +42,15 @@ function Index() {
       <div className="custom_root h-screen w-screen">
         <div className="container mx-auto p-4">
           <div>
-            <img
-              src="/banner.png"
-              alt="Hearts Banner Image"
-              className="mx-auto"
-            />
+            <picture>
+              <source srcSet="/banner.webp" type="image/webp" />
+              <source srcSet="/banner.png" type="image/png" />
+              <img
+                src="/banner.png"
+                alt="Hearts Banner Image"
+                className="mx-auto"
+              />
+            </picture>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-16 md:gap-x-16">
             <div>
