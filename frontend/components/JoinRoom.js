@@ -1,12 +1,28 @@
-import clsx from "clsx";
+import { useRouter } from "next/router";
 
-const join_room = () => {
-  console.log("Room");
-};
+import clsx from "clsx";
+import cogoToast from "cogo-toast";
+
+import feathers_client from "../utils/feathers_client";
 
 function JoinRoom() {
+  const router = useRouter();
+
   const [roomCode, setRoomCode] = React.useState("");
   const [playerName, setPlayerName] = React.useState("");
+
+  const join_room = () => {
+    feathers_client
+      .service("rooms")
+      .patch(roomCode, { player_name: playerName })
+      .then((r) => {
+        if (!r.success) {
+          cogoToast.error("Invalid Room Code");
+          return;
+        }
+        router.push("/room/[id]", `/room/${r.room.id}`);
+      });
+  };
 
   return (
     <>
