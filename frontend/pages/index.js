@@ -20,7 +20,7 @@ const customStyles = {
   },
 };
 
-Modal.setAppElement("#__next");
+Modal.setAppElement("#custom_root");
 
 function Index() {
   const [modalContent, setModalContent] = React.useState(null);
@@ -39,7 +39,7 @@ function Index() {
       <Head>
         <title>Hearts</title>
       </Head>
-      <div className="custom_root h-screen w-screen">
+      <div className="h-screen w-screen" id="custom_root">
         <div className="container mx-auto p-4">
           <div>
             <picture>
@@ -82,7 +82,7 @@ function Index() {
       </Modal>
       <style jsx>
         {`
-          .custom_root {
+          #custom_root {
             background-color: #52c41a;
           }
           .button {
