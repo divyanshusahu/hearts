@@ -58,7 +58,6 @@ class RoomService {
 const app = express(feathers());
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.configure(socketio());
 
 app.use("/rooms", new RoomService());
