@@ -17,7 +17,7 @@ function JoinRoom() {
       .patch(roomCode, { player_name: playerName })
       .then((r) => {
         if (!r.success) {
-          cogoToast.error("Invalid Room Code");
+          cogoToast.error(r.message);
           return;
         }
         router.push("/room/[id]", `/room/${r.room.id}`);
