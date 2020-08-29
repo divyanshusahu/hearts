@@ -2,6 +2,7 @@ const feathers = require("@feathersjs/feathers");
 const express = require("@feathersjs/express");
 const socketio = require("@feathersjs/socketio");
 const { v4: uuidv4 } = require("uuid");
+const isEmpty = require("is-empty");
 
 class RoomService {
   constructor() {
@@ -24,9 +25,9 @@ class RoomService {
 
   async create(data) {
     let room_code = 1000 + Math.floor(Math.random() * 9000);
-    while (this.rooms.includes(room_code)) {
+    /*while (this.rooms.includes(room_code)) {
       room_code = 1000 + Math.floor(Math.random() * 9000);
-    }
+    }*/
     const room = {
       id: uuidv4(),
       room_code: room_code,
@@ -45,13 +46,21 @@ class RoomService {
         this.rooms[i].open &&
         this.rooms[i].players.length < 5
       ) {
+        if (!isEmpty(body.open)) {
+          this.rooms[i].open = false;
+          return { success: true, room: this.rooms[i] };
+        }
+        if (this.rooms[i].players.includes(body.player_name)) {
+          return { success: false, message: "This Name is already taken" };
+        }
         this.rooms[i].players.push(body.player_name);
+        if (this.rooms[i].players.length === 5) {
+          this.rooms[i].open = false;
+        }
         return { success: true, room: this.rooms[i] };
-      } else {
-        return { success: false };
       }
     }
-    return { success: false };
+    return { success: false, message: "Invalid Room Code" };
   }
 }
 
