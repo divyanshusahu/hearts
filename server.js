@@ -3,6 +3,7 @@ const express = require("@feathersjs/express");
 const socketio = require("@feathersjs/socketio");
 const { v4: uuidv4 } = require("uuid");
 const isEmpty = require("is-empty");
+const cors = require("cors");
 
 class RoomService {
   constructor() {
@@ -66,7 +67,10 @@ class RoomService {
 
 const app = express(feathers());
 
+app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.configure(express.rest());
 app.configure(socketio());
 
 app.use("/rooms", new RoomService());
@@ -77,10 +81,4 @@ app.on("connection", (connection) => app.channel("game").join(connection));
 
 app.publish((data) => app.channel("game"));
 
-const PORT = process.env.PORT || 3030;
-
-app
-  .listen(PORT)
-  .on("listening", () =>
-    console.log(`Feathersjs service started on port ${PORT}`)
-  );
+module.exports = app;
