@@ -12,8 +12,12 @@
     "@feathersjs/express": "^4.5.8",
     "@feathersjs/feathers": "^4.5.8",
     "@feathersjs/socketio": "^4.5.8",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "feathers-mongoose": "^8.3.1",
     "is-empty": "^1.2.0",
+    "mongoose": "^5.10.2",
     "uuid": "^8.3.0"
   },
   "devDependencies": {
