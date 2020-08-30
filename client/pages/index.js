@@ -2,6 +2,7 @@ import Head from "next/head";
 
 import Modal from "react-modal";
 
+import Login from "../components/Login";
 import CreateRoom from "../components/CreateRoom";
 import JoinRoom from "../components/JoinRoom";
 
@@ -20,7 +21,7 @@ const customStyles = {
   },
 };
 
-Modal.setAppElement("#custom_root");
+Modal.setAppElement("body");
 
 function Index() {
   const [modalContent, setModalContent] = React.useState(null);
@@ -72,6 +73,9 @@ function Index() {
           </div>
         </div>
       </div>
+      <Modal isOpen={true} style={customStyles}>
+        <Login />
+      </Modal>
       <Modal
         isOpen={showModal}
         style={customStyles}
