@@ -1,10 +1,12 @@
 import Head from "next/head";
 
 import Modal from "react-modal";
+import jwtDecode from "jwt-decode";
 
 import Login from "../components/Login";
 import CreateRoom from "../components/CreateRoom";
 import JoinRoom from "../components/JoinRoom";
+import feathers_client from "../utils/feathers_client";
 
 const customStyles = {
   content: {
@@ -35,6 +37,34 @@ function Index() {
     setShowModal((s) => !s);
   };
 
+  const [showLoginModel, setShowLoginModel] = React.useState(false);
+  const [user, setUser] = React.useState(null);
+
+  const isBrowser = typeof window !== "undefined";
+
+  React.useEffect(() => {
+    feathers_client.service("login").on("created", (data) => {
+      if (data.success) {
+        setUser(jwtDecode(data.token).username);
+        setShowLoginModel(false);
+      }
+    });
+    if (isBrowser) {
+      if (localStorage.heartsLoginToken) {
+        const token = localStorage.heartsLoginToken;
+        const decoded = jwtDecode(token);
+        if (decoded.exp < Date.now() / 1000) {
+          setShowLoginModel(true);
+        } else {
+          setUser(decoded.username);
+          setShowLoginModel(false);
+        }
+      } else {
+        setShowLoginModel(true);
+      }
+    }
+  }, []);
+
   return (
     <>
       <Head>
@@ -42,6 +72,9 @@ function Index() {
       </Head>
       <div className="h-screen w-screen" id="custom_root">
         <div className="container mx-auto p-4">
+          <p className="text-right text-white font-bold">
+            {user ? `${user}` : null}
+          </p>
           <div>
             <picture>
               <source srcSet="/banner.webp" type="image/webp" />
@@ -73,7 +106,7 @@ function Index() {
           </div>
         </div>
       </div>
-      <Modal isOpen={true} style={customStyles}>
+      <Modal isOpen={showLoginModel} style={customStyles}>
         <Login />
       </Modal>
       <Modal
