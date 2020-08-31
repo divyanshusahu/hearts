@@ -24,6 +24,18 @@ function Login() {
             cogoToast.error(r.message);
           }
         });
+    } else if (prompt === "login") {
+      feathers_client
+        .service("login")
+        .create(post_data)
+        .then((r) => {
+          if (!r.success) {
+            cogoToast.error(r.message);
+          } else {
+            localStorage.setItem("heartsLoginToken", r.token);
+            cogoToast.success(r.message);
+          }
+        });
     }
   };
 
