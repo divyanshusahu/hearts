@@ -45,7 +45,7 @@ module.exports = (app) => {
             delete context.result;
             context.result = {
               success: true,
-              message: "Account successfully created",
+              message: "Account successfully created. Login now.",
             };
           }
           return context;
