@@ -39,14 +39,14 @@ function Room(props) {
   const [roomStatus, setRoomStatus] = React.useState(props.open);
 
   const start_game = () => {
-    feathers_client
+    /*feathers_client
       .service("rooms")
       .patch(props.code, { open: false })
       .then((data) => {
         if (data.success) {
           setRoomStatus(false);
         }
-      });
+      });*/
   };
 
   React.useEffect(() => {
