@@ -5,16 +5,15 @@ import cogoToast from "cogo-toast";
 
 import feathers_client from "../utils/feathers_client";
 
-function JoinRoom() {
+function JoinRoom(props) {
   const router = useRouter();
 
   const [roomCode, setRoomCode] = React.useState("");
-  const [playerName, setPlayerName] = React.useState("");
 
   const join_room = () => {
     feathers_client
       .service("rooms")
-      .patch(roomCode, { player_name: playerName })
+      .patch(roomCode, { player_name: props.user })
       .then((r) => {
         if (!r.success) {
           cogoToast.error(r.message);
@@ -35,20 +34,11 @@ function JoinRoom() {
           value={roomCode}
           onChange={(event) => setRoomCode(event.target.value)}
         />
-        <input
-          type="text"
-          placeholder="Player Name"
-          className="border rounded-lg px-4 py-2 focus:outline-none w-full"
-          value={playerName}
-          onChange={(event) => setPlayerName(event.target.value)}
-        />
         <button
           className={clsx(
             "w-full bg-blue-500 px-4 py-2 font-bold text-white mt-4 focus:outline-none",
-            {
-              "opacity-50 cursor-not-allowed pointer-events-none":
-                roomCode.length !== 4 || playerName.length < 3,
-            }
+            roomCode.length !== 4 &&
+              "opacity-50 cursor-not-allowed pointer-events-none"
           )}
           onClick={join_room}
         >
