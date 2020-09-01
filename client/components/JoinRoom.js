@@ -19,7 +19,7 @@ function JoinRoom(props) {
           cogoToast.error(r.message);
           return;
         }
-        router.push("/room/[id]", `/room/${r.room.id}`);
+        router.push("/room/[_id]", `/room/${r["_id"]}`);
       });
   };
 
