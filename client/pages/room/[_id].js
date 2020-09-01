@@ -22,7 +22,7 @@ const customStyles = {
   },
 };
 
-Modal.setAppElement("#custom_root");
+Modal.setAppElement("body");
 
 function Room(props) {
   const router = useRouter();
@@ -35,13 +35,13 @@ function Room(props) {
     );
   }
 
-  const [players, setPlayers] = React.useState(props.room.players);
-  const [roomStatus, setRoomStatus] = React.useState(props.room.open);
+  const [players, setPlayers] = React.useState(props.players);
+  const [roomStatus, setRoomStatus] = React.useState(props.open);
 
   const start_game = () => {
     feathers_client
       .service("rooms")
-      .patch(props.room.room_code, { open: false })
+      .patch(props.code, { open: false })
       .then((data) => {
         if (data.success) {
           setRoomStatus(false);
@@ -52,9 +52,9 @@ function Room(props) {
   React.useEffect(() => {
     feathers_client.service("rooms").on("patched", (data) => {
       if (data.success) {
-        setPlayers(data.room.players);
-        setRoomStatus(data.room.open);
-        if (data.room.players.length === 5) {
+        setPlayers(data.players);
+        setRoomStatus(data.open);
+        if (data.players.length === 5) {
           setRoomStatus(false);
         }
       }
@@ -71,7 +71,7 @@ function Room(props) {
       <Modal isOpen={roomStatus} style={customStyles}>
         <WaitingForPlayers
           players={players}
-          room_code={props.room.room_code}
+          room_code={props.code}
           start_game={start_game}
         />
       </Modal>
@@ -87,7 +87,9 @@ function Room(props) {
 }
 
 export async function getServerSideProps(context) {
-  const data = await feathers_client.service("rooms").get(context.params.id);
+  const data = await feathers_client
+    .service("rooms")
+    .get(context.params["_id"]);
   return { props: data };
 }
 
