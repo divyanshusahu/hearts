@@ -1,10 +1,10 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 import Modal from "react-modal";
 import jwtDecode from "jwt-decode";
 
 import Login from "../components/Login";
-import CreateRoom from "../components/CreateRoom";
 import JoinRoom from "../components/JoinRoom";
 import feathers_client from "../utils/feathers_client";
 
@@ -26,17 +26,7 @@ const customStyles = {
 Modal.setAppElement("body");
 
 function Index() {
-  const [modalContent, setModalContent] = React.useState(null);
-  const [showModal, setShowModal] = React.useState(false);
-  const toggleModal = (type) => {
-    if (type === "create") {
-      setModalContent(<CreateRoom />);
-    } else if (type === "join") {
-      setModalContent(<JoinRoom />);
-    }
-    setShowModal((s) => !s);
-  };
-
+  const router = useRouter();
   const [showLoginModel, setShowLoginModel] = React.useState(false);
   const [user, setUser] = React.useState(null);
 
@@ -65,6 +55,20 @@ function Index() {
     }
   }, []);
 
+  const [showJoinModal, setShowJoinModal] = React.useState(false);
+  const toggleJoinModal = () => {
+    setShowJoinModal((s) => !s);
+  };
+
+  const create_room = () => {
+    feathers_client
+      .service("rooms")
+      .create({ room_creator: user })
+      .then((r) => {
+        router.push("/room/[_id]", `/room/${r["_id"]}`);
+      });
+  };
+
   return (
     <>
       <Head>
@@ -90,7 +94,7 @@ function Index() {
             <div>
               <button
                 className="button px-8 py-4 text-2xl font-bold text-white rounded-lg w-full md:w-auto shadow-md focus:outline-none md:float-right"
-                onClick={() => toggleModal("create")}
+                onClick={create_room}
               >
                 Create Room
               </button>
@@ -98,7 +102,7 @@ function Index() {
             <div>
               <button
                 className="button px-8 py-4 text-2xl font-bold text-white rounded-lg w-full md:w-auto shadow-md focus:outline-none"
-                onClick={() => toggleModal("join")}
+                onClick={toggleJoinModal}
               >
                 Join Room
               </button>
@@ -110,12 +114,12 @@ function Index() {
         <Login />
       </Modal>
       <Modal
-        isOpen={showModal}
+        isOpen={showJoinModal}
         style={customStyles}
         shouldCloseOnOverlayClick={true}
-        onRequestClose={toggleModal}
+        onRequestClose={toggleJoinModal}
       >
-        {modalContent}
+        <JoinRoom user={user} />
       </Modal>
       <style jsx>
         {`
