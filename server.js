@@ -11,7 +11,11 @@ mongoose.Promise = global.Promise;
 const MLAB_URI = require("./config/keys").MLAB_URI;
 
 mongoose
-  .connect(MLAB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(MLAB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  })
   .then(() => console.log("Connected to Mongo Database"))
   .catch((e) => console.log(e));
 
@@ -20,7 +24,7 @@ const app = express(feathers());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.configure(express.rest());
+//app.configure(express.rest());
 app.configure(socketio());
 
 app.configure(services);
