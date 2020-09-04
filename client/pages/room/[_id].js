@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 
 import Modal from "react-modal";
+import isEmpty from "is-empty";
+import jwtDecode from "jwt-decode";
 
 import WaitingForPlayers from "../../components/WaitingForPlayers";
 
@@ -23,6 +25,7 @@ const customStyles = {
 };
 
 Modal.setAppElement("body");
+const isBrowser = typeof window !== "undefined";
 
 function Room(props) {
   const router = useRouter();
@@ -33,6 +36,19 @@ function Room(props) {
         <button onClick={() => router.replace("/")}>GO BACK</button>
       </div>
     );
+  }
+
+  if (isBrowser) {
+    if (
+      isEmpty(localStorage.heartsLoginToken) ||
+      !props.players.includes(jwtDecode(localStorage.heartsLoginToken).username)
+    ) {
+      return (
+        <div id="custom_root">
+          <button onClick={() => router.replace("/")}>GO BACK</button>
+        </div>
+      );
+    }
   }
 
   const [players, setPlayers] = React.useState(props.players);
