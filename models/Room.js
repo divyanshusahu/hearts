@@ -10,11 +10,16 @@ const RoomSchema = new Schema({
   players: {
     type: Array,
     required: true,
-    expires: 21600,
   },
   open: {
     type: Boolean,
     required: true,
+  },
+  createdAt: {
+    type: Date,
+    required: true,
+    default: Date.now,
+    expires: 21600,
   },
 });
 
