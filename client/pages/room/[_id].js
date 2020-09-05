@@ -5,6 +5,7 @@ import isEmpty from "is-empty";
 import jwtDecode from "jwt-decode";
 
 import WaitingForPlayers from "../../components/WaitingForPlayers";
+import PlayingCard from "../../components/PlayingCard";
 
 import feathers_client from "../../utils/feathers_client";
 
@@ -51,18 +52,24 @@ function Room(props) {
     }
   }
 
+  const user = isBrowser
+    ? jwtDecode(localStorage.heartsLoginToken).username
+    : null;
+
   const [players, setPlayers] = React.useState(props.players);
   const [roomStatus, setRoomStatus] = React.useState(props.open);
+  const [myCards, setMyCards] = React.useState([]);
 
   const start_game = () => {
-    /*feathers_client
+    feathers_client
       .service("rooms")
       .patch(props.code, { open: false })
       .then((data) => {
         if (data.success) {
           setRoomStatus(false);
         }
-      });*/
+      });
+    feathers_client.service("plays").create({ _roomid: router.query._id });
   };
 
   React.useEffect(() => {
@@ -75,14 +82,22 @@ function Room(props) {
         }
       }
     });
+    feathers_client.service("plays").on("created", (data) => {
+      setMyCards(data.decks[user]);
+    });
   }, []);
 
-  let display = roomStatus ? null : "Loading Game...";
+  let display = roomStatus ? null : myCards.length ? (
+    <PlayingCard card={myCards[0]} />
+  ) : null;
 
   return (
     <>
       <div className="w-screen h-screen" id="custom_root">
-        {display}
+        <div className="container mx-auto">
+          <p className="text-right text-white font-bold">{user}</p>
+          {display}
+        </div>
       </div>
       <Modal isOpen={roomStatus} style={customStyles}>
         <WaitingForPlayers
