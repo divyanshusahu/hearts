@@ -31,8 +31,7 @@ module.exports = (app) => {
             return context;
           }
           context.id = isRoomExist._id;
-          if (!isRoomExist.open) {
-            context.result = { success: false, message: "Room is full" };
+          if (!isEmpty(context.data.open)) {
             return context;
           }
           if (isRoomExist.players.includes(context.data.player_name)) {
@@ -42,6 +41,10 @@ module.exports = (app) => {
               players: isRoomExist.players,
               open: isRoomExist.open,
             };
+            return context;
+          }
+          if (!isRoomExist.open) {
+            context.result = { success: false, message: "Room is full" };
             return context;
           }
           context.data.players = isRoomExist.players;
